@@ -11,24 +11,32 @@ import org.springframework.web.socket.*;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class LocationWebSocketHandler implements WebSocketHandler {
+public class LocationWebSocketHandler extends TextWebSocketHandler {
 
     private final RedisPublisher publisher;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) {
+    public void afterConnectionEstablished(WebSocketSession session) {
+        log.info("WebSocket connection established: {}", session.getId());
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         try {
             LocationUpdate update = objectMapper.readValue(message.getPayload(), LocationUpdate.class);
-            log.info("Received location from {}: {}, {}", update.getUserId(), update.getLatitude(), update.getLongitude());
-            publisher.publishLocation(update);
+            log.info("Received location update from {}: ({}, {})",
+                    update.getUserId(), update.getLatitude(), update.getLongitude());
+
+            // Publish to Redis so other services can process
+            publisher.publish("location-updates", message.getPayload());
         } catch (Exception e) {
-            log.error("Failed to process location message: {}", message.getPayload(), e);
+            log.error("Error processing WebSocket message", e);
         }
     }
 
-    @Override public void afterConnectionEstablished(WebSocketSession session) {}
-    @Override public void handleTransportError(WebSocketSession session, Throwable exception) {}
-    @Override public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {}
-    @Override public boolean supportsPartialMessages() { return false; }
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        log.info("WebSocket connection closed: {}", session.getId());
+    }  
 }
