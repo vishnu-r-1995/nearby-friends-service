@@ -16,11 +16,23 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_HOST=redis
     depends_on:
       - redis
     networks:
       - nearby-network
+
+  proximity-service:
+    build: ./proximity-service
+    container_name: proximity-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - nearby-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 
 networks:
   nearby-network:
