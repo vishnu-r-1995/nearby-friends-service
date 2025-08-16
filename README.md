@@ -94,7 +94,7 @@ Response:
 
 ## License
 
-The project is licensed under the terms of GNU LGPL v2.0.
+The project is licensed under the terms of GNU Lesser General Public License v2.1 (LICENSE.md)
 
 ---
 
