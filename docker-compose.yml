@@ -33,6 +33,7 @@ services:
       - nearby-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATA_REDIS_HOST=redis
 
 networks:
   nearby-network:
