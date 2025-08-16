@@ -22,7 +22,7 @@ public class ProximityController {
     @GetMapping("/nearby")
     public List<LocationMessage> getNearbyFriends(
             @RequestParam String userId,
-            @RequestParam double radiusKm) {
+            @RequestParam(defaultValue = "1") double radiusKm) {
         return service.findNearbyFriends(userId, radiusKm);
     }
 }
