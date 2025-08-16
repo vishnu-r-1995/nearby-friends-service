@@ -94,5 +94,5 @@ Response:
 
 ## 📜 License
 
-The project is licensed under the terms of GNU Lesser General Public License v2.1 (/LICENSE)
+The project is licensed under the terms of GNU Lesser General Public License v2.1 (LICENSE.yml)
 
